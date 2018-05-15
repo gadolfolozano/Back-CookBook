@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 var routes = require('./routes')
+const Category = require('./model/Category').Category;
 
 //connecting database
 var mongoose = require('mongoose');
@@ -10,7 +11,25 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   // we're connected!
   console.log('DB connected successfully!');
+
+  initDataBaseIfNeeded();
 });
+
+function initDataBaseIfNeeded() {
+
+    db.dropCollection('categories', function(err, result) {
+      console.error(result);
+      const categories = [
+        {id: 1001, name: 'pastas'},
+        {id: 1002, name: 'deserts'},
+        {id: 1003, name: 'meats'}
+      ];
+
+      Category.insertMany(categories, function (err, categories) {
+        console.error(categories);
+      })
+    });
+}
 
 app.use(express.json());
 
@@ -36,4 +55,4 @@ app.use(function (req, res, next) {
 
 app.use('/v1', routes);
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'));
+app.listen(3009, () => console.log('Example app listening on port 3000!'));
