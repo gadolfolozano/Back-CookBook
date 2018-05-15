@@ -55,4 +55,4 @@ app.use(function (req, res, next) {
 
 app.use('/v1', routes);
 
-app.listen(3009, () => console.log('Example app listening on port 3000!'));
+app.listen(3000, () => console.log('Example app listening on port 3000!'));
