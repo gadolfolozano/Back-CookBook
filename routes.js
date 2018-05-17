@@ -3,6 +3,12 @@ var router = express.Router();
 const Category = require('./model/Category').Category;
 const Ingredient = require('./model/Ingredient').Ingredient;
 const Recipe = require('./model/Recipe').Recipe;
+const User = require('./model/User').User;
+const DefaultResponses = require('./common/DefaultResponses').DefaultResponses;
+
+//logging
+var bunyan = require('bunyan');
+var log = bunyan.createLogger({name: 'routes'});
 
 // middleware that is specific to this router
 router.use(function timeLog (req, res, next) {
@@ -49,6 +55,49 @@ router.put('/recipes', function (req, res) {
   recipe.save(function (err, recipe) {
     if (err) return console.error(err);
     res.json(recipe);
+  })
+})
+
+// get all users
+router.get('/users', function (req, res) {
+  User.find(function (err, users) {
+    if (err) return console.error(err);
+    var parsedUsers = []
+    users.forEach((user, index) => {
+        parsedUsers.push(user.parse())
+    });
+    res.json(parsedUsers);
+  })
+})
+
+//login a user by username and password
+router.post('/login', function (req, res) {
+  const body = req.body;
+  log.info('post login', body);
+  var reqUser = new User().toSchema(body);
+  if(!reqUser.validateToLogin()) {
+    const errorResponse = DefaultResponses.invalidCredentials
+    log.error(body, errorResponse)
+    res.json(errorResponse)
+    return;
+  }
+  User.findOne(reqUser, function (err, user) {
+    if (err) {
+      const errorResponse = DefaultResponses.unHandledError
+      log.error(err, errorResponse)
+      res.json(errorResponse)
+      return;
+    }
+    if (!user) {
+      const errorResponse = DefaultResponses.userNotFound
+      log.error(errorResponse)
+      res.json(errorResponse)
+      return
+    }
+
+    const response = user.parse();
+    log.info('post login', response);
+    res.json(response);
   })
 })
 
