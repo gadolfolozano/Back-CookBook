@@ -2,25 +2,26 @@ const mongoose = require('mongoose');
 
 const UserSchema = mongoose.Schema({
   _id: String,
-  name: String,
+  username: String,
   password: String
 }, { collection: 'users' });
 
 UserSchema.method('parse', function() {
     var user = this.toObject();
-    return {id: user._id, username: user.name};
+    return {id: user._id, username: user.username};
 });
 
 UserSchema.method('toSchema', function(parsed) {
     return new User({
-      name: parsed.username,
+      username: parsed.username,
       password: parsed.password
     });
 });
 
 UserSchema.method('validateToLogin', function() {
     var user = this.toObject();
-    return user && user.name && user.password;
+    if(user && user.username && user.password) return true;
+    return false;
 });
 
 
