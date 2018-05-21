@@ -95,7 +95,7 @@ router.post('/login', function (req, res) {
       return
     }
 
-    const response = user.parse();
+    const response = { user: user.parse() }
     log.info('post login', response);
     res.json(response);
   })
