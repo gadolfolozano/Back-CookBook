@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var service = require('./service');
+var middleware = require('./middleware');
 const Category = require('./model/Category').Category;
 const Ingredient = require('./model/Ingredient').Ingredient;
 const Recipe = require('./model/Recipe').Recipe;
@@ -95,11 +97,22 @@ router.post('/login', function (req, res) {
       return
     }
 
-    const response = { user: user.parse() }
+    const parsedUser = user.parse();
+    const response = {
+      token: service.createToken(user.id),
+      user: parsedUser
+    }
     log.info('post login', response);
     res.json(response);
   })
 })
+
+router.post('/private',
+  middleware.ensureAuthenticated,
+  function(req, res) {
+    res.json({body: req.body, userId: req.userId})
+  }
+);
 
 
 module.exports = router
