@@ -12,12 +12,6 @@ var auth = require('./auth');
 var bunyan = require('bunyan');
 var log = bunyan.createLogger({name: 'routes'});
 
-// middleware that is specific to this router
-router.use(function timeLog (req, res, next) {
-  console.log('Time: ', Date.now())
-  next()
-})
-
 // get all categories
 router.get('/categories', function (req, res) {
   Category.find(function (err, categories) {
@@ -62,19 +56,20 @@ router.put('/recipes', function (req, res) {
 
 // get all users
 router.get('/users', function (req, res) {
-  //User.findById('5b05c556a04b997a8479e9eb',function (err, users) {
-  User.find({username: 'test', password: 'e10adc3949ba59abbe56e057f20f883e'}, function (err, users) {
+  User.find(function (err, users) {
     if (err) return console.error(err);
-    /*var parsedUsers = []
+    var parsedUsers = []
     users.forEach((user, index) => {
         parsedUsers.push(user.parse())
-    });*/
-    res.json(users);
+    });
+    res.json(parsedUsers);
   })
 })
 
 //login a user by username and password
 router.post('/login', auth.login)
+//logOut
+router.post('/logout', middleware.ensureAuthenticated, auth.logout)
 
 router.post('/private',
   middleware.ensureAuthenticated,

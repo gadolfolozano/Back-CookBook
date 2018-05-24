@@ -33,6 +33,24 @@ function login(req, res) {
   })
 }
 
+function logout(req, res) {
+  User.findByIdAndUpdate( req.userId, { $unset: { validToken: 1 }}, function (err, updatedUser) {
+    if (err) {
+      const errorResponse = DefaultResponses.unHandledError
+      console.log.error(err, errorResponse)
+      res.json(errorResponse)
+      return;
+    }
+    if (!updatedUser) {
+      const errorResponse = DefaultResponses.userNotFound
+      console.log.error(errorResponse)
+      res.json(errorResponse)
+      return
+    }
+    res.json({status: 'OK'});
+  })
+}
+
 function checkTokenAndUpdatIfNeeded(userModel, res) {
   const validToken = userModel.validToken;
   if(middleware.validateToken(validToken)){
@@ -73,3 +91,4 @@ function sendLoginSuccessResponse(updatedUserModel, token, res){
 }
 
 exports.login = login
+exports.logout = logout

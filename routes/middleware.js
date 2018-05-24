@@ -2,6 +2,7 @@ var jwt = require('jwt-simple');
 var moment = require('moment');
 var config = require('../config');
 const DefaultResponses = require('../common/DefaultResponses').DefaultResponses;
+const User = require('../model/User').User;
 //logging
 var bunyan = require('bunyan');
 var log = bunyan.createLogger({name: 'middleware'});
@@ -16,9 +17,23 @@ function ensureAuthenticated(req, res, next) {
      return res.json(DefaultResponses.tokenExpired);
   }
 
+  //Ckeck that the user id is asociated with the validtoken in users collection
   var payload = jwt.decode(token, config.TOKEN_SECRET);
-  req.userId = payload.sub;
-  next();
+  const userIdFromToken = payload.sub;
+  User.findOne({_id: userIdFromToken, validToken: token }, function (err, user) {
+    if (err) {
+      const errorResponse = DefaultResponses.unHandledError
+      res.json(errorResponse)
+      return;
+    }
+    if (!user) {
+      const errorResponse = DefaultResponses.userNotFound
+      res.json(errorResponse)
+      return
+    }
+    req.userId = userIdFromToken;
+    next();
+  })
 }
 
 function validateToken(token) {
