@@ -19,6 +19,20 @@ const unHandledError = {
   }
 }
 
+const noTokenProvided = {
+  error: {
+    errorCode: 403,
+    message: "Token was not provided"
+  }
+}
+
+const tokenExpired = {
+  error: {
+    errorCode: 401,
+    message: "Token expired"
+  }
+}
+
 const notFound = {
   error: {
     errorCode: 404,
@@ -30,7 +44,9 @@ const DefaultResponses = {
   invalidCredentials,
   userNotFound,
   unHandledError,
-  notFound
+  notFound,
+  noTokenProvided,
+  tokenExpired
 }
 
-module.exports.DefaultResponses = DefaultResponses;
+exports.DefaultResponses = DefaultResponses;

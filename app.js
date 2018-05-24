@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
-var routes = require('./routes')
-const Category = require('./model/Category').Category;
+var routes = require('./routes/main')
+var config = require('./config')
 const DefaultResponses = require('./common/DefaultResponses').DefaultResponses;
 
 //logging
@@ -10,7 +10,7 @@ var log = bunyan.createLogger({name: 'app'});
 
 //connecting database
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/cookBookDataBase');
+mongoose.connect(config.DATA_BASE_URI);
 var db = mongoose.connection;
 db.on('error', function() {
   log.error('DB connection error');
@@ -18,23 +18,7 @@ db.on('error', function() {
 db.once('open', function() {
   // we're connected!
   log.info('DB connected successfully!');
-  initDataBaseIfNeeded();
 });
-
-function initDataBaseIfNeeded() {
-
-    db.dropCollection('categories', function(err, result) {
-      const categories = [
-        {id: 1001, name: 'pastas'},
-        {id: 1002, name: 'deserts'},
-        {id: 1003, name: 'meats'}
-      ];
-
-      Category.insertMany(categories, function (err, categories) {
-
-      })
-    });
-}
 
 app.use(express.json());
 
@@ -61,6 +45,7 @@ app.use((req, res, next) => {
   err.status = 404;
   next(err);
 });
+
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
   const messageError = err.status === 404 ? DefaultResponses.notFound : DefaultResponses.unHandledError
@@ -68,4 +53,5 @@ app.use((err, req, res, next) => {
   res.json(messageError);
 });
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'));
+const port = config.PORT;
+app.listen(port, () => console.log('Example app listening on port ' + port + "'!'" ));
