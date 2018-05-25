@@ -31,7 +31,7 @@ function ensureAuthenticated(req, res, next) {
       res.json(errorResponse)
       return
     }
-    req.userId = userIdFromToken;
+    req.user = user.parse();
     next();
   })
 }

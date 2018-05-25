@@ -7,6 +7,7 @@ const Recipe = require('../model/Recipe').Recipe;
 const User = require('../model/User').User;
 const DefaultResponses = require('../common/DefaultResponses').DefaultResponses;
 var auth = require('./auth');
+var home = require('./home');
 
 //logging
 var bunyan = require('bunyan');
@@ -70,6 +71,9 @@ router.get('/users', function (req, res) {
 router.post('/login', auth.login)
 //logOut
 router.post('/logout', middleware.ensureAuthenticated, auth.logout)
+
+//login the dasborad of an authenticated user
+router.post('/getDashboard', middleware.ensureAuthenticated , home.getDashboard)
 
 router.post('/private',
   middleware.ensureAuthenticated,

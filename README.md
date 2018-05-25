@@ -15,3 +15,9 @@ After that run:
 go to this endpoint (use GET method)
 
 ### `http://localhost:3000/v1/categories`
+
+## Run unit tests
+
+run this command:
+
+### `npm run test`  

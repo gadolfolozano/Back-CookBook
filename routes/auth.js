@@ -34,7 +34,7 @@ function login(req, res) {
 }
 
 function logout(req, res) {
-  User.findByIdAndUpdate( req.userId, { $unset: { validToken: 1 }}, function (err, updatedUser) {
+  User.findByIdAndUpdate( req.user.id, { $unset: { validToken: 1 }}, function (err, updatedUser) {
     if (err) {
       const errorResponse = DefaultResponses.unHandledError
       console.log.error(err, errorResponse)

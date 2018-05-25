@@ -1,10 +1,17 @@
 const mongoose = require('mongoose');
 
-const categorySchema = mongoose.Schema({
-  id: String,
+const CategorySchema = mongoose.Schema({
   name: String
 }, { collection: 'categories' });
 
-const Category = mongoose.model('category', categorySchema);
+CategorySchema.method('parse', function() {
+    var category = this.toObject();
+    return {
+      id: category._id,
+      name: category.name
+    };
+});
+
+const Category = mongoose.model('category', CategorySchema);
 
 module.exports.Category = Category;
