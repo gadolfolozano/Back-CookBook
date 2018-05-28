@@ -4,7 +4,8 @@ const User = require('../model/User').User;
 describe('User', function() {
   describe('#parse()', function() {
     it('should return the parsed id', function() {
-      assert.equal(new User({_id: '123456'}).parse().id, '123456');
+      var user = new User();
+      assert.equal(user.parse().id.toString(), user._id.toString());
     });
 
     it('should return the parsed username', function() {
