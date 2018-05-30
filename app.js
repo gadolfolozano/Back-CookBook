@@ -48,10 +48,22 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  const messageError = err.status === 404 ? DefaultResponses.notFound : DefaultResponses.unHandledError
+  const messageError = getErrorMessage(err.status)
   log.error(messageError)
   res.json(messageError);
 });
 
-const port = config.PORT;
-app.listen(port, () => console.log('Example app listening on port ' + port + "'!'" ));
+function getErrorMessage(status) {
+  switch (status) {
+    case 400:
+      return DefaultResponses.badRequest;
+    case 404:
+      return DefaultResponses.notFound;
+    default:
+      return DefaultResponses.unHandledError;
+  }
+}
+
+const port = 3000;
+var server = app.listen(port, () => console.log('Example app listening on port ' + port + "'!'" ));
+module.exports = server;

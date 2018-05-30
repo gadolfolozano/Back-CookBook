@@ -28,3 +28,77 @@ describe('User', function() {
     });
   });
 });
+
+
+var request = require('supertest');
+describe('loading express', function () {
+  var server;
+  var token = null;
+  beforeEach(function () {
+    //server = require('./server');
+    server = require('../app');
+  });
+  afterEach(function () {
+    server.close();
+  });
+  it('responds to /v1/categories', function testSlash(done) {
+    this.timeout(10000);
+    request(server)
+      .get('/v1/categories')
+      .expect(200, done);
+  });
+  it('responds to /v1/recipes', function testSlash(done) {
+    this.timeout(10000);
+    request(server)
+      .get('/v1/recipes')
+      .expect(200, function(err, res) {
+        console.log('res recipes ',  res.body);
+        done()
+      });
+  });
+  it('404 everything else', function testPath(done) {
+    request(server)
+      .get('/foo/bar')
+      .expect(404, done);
+  });
+  it('responds Unauthorized to /v1/getDashboard', function testSlash(done) {
+    this.timeout(10000);
+    request(server)
+      .post('/v1/getDashboard')
+      .expect(401, done);
+  });
+  it('responds Bad Request to /v1/login', function testSlash(done) {
+    this.timeout(10000);
+    request(server)
+      .post('/v1/login')
+      .expect(400, done);
+  });
+  it('responds success to /v1/login', function testSlash(done) {
+    this.timeout(10000);
+    request(server)
+      .post('/v1/login')
+      .set('Content-Type', 'application/json')
+      .send({
+        "username": "test",
+        "password": "e10adc3949ba59abbe56e057f20f883e"
+      })
+      .expect(200, function(err, res) {
+        token = res.body.token;
+        done()
+      });
+  });
+  it('responds success to /v1/getDashboard', function testSlash(done) {
+    this.timeout(10000);
+    request(server)
+      .post('/v1/getDashboard')
+      .set('Content-Type', 'application/json')
+      .send({
+        "token": token
+      })
+      .expect(200, function(err, res) {
+        done()
+      });
+  });
+
+
+});

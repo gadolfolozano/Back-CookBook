@@ -2,9 +2,7 @@ var express = require('express');
 var router = express.Router();
 var middleware = require('./middleware');
 const Category = require('../model/Category').Category;
-const Ingredient = require('../model/Ingredient').Ingredient;
 const Recipe = require('../model/Recipe').Recipe;
-const User = require('../model/User').User;
 const DefaultResponses = require('../common/DefaultResponses').DefaultResponses;
 var auth = require('./auth');
 var home = require('./home');
@@ -21,49 +19,15 @@ router.get('/categories', function (req, res) {
   })
 })
 
-// get all ingredients
-router.get('/ingredients', function (req, res) {
-  Ingredient.find(function (err, categories) {
-    if (err) return console.error(err);
-    res.json(categories);
-  })
-})
-
-//save ingredients
-router.put('/ingredients', function (req, res) {
-  const ingredient = new Ingredient(req.body);
-  ingredient.save(function (err, ingredient) {
-    if (err) return console.error(err);
-    res.json(ingredient);
-  })
-})
-
 // get all recipes
 router.get('/recipes', function (req, res) {
-  Recipe.find(function (err, recipes) {
+  Recipe.find(function (err, categories) {
     if (err) return console.error(err);
-    res.json(recipes);
-  })
-})
-
-//save recipe
-router.put('/recipes', function (req, res) {
-  const recipe = new Recipe(req.body);
-  recipe.save(function (err, recipe) {
-    if (err) return console.error(err);
-    res.json(recipe);
-  })
-})
-
-// get all users
-router.get('/users', function (req, res) {
-  User.find(function (err, users) {
-    if (err) return console.error(err);
-    var parsedUsers = []
-    users.forEach((user, index) => {
-        parsedUsers.push(user.parse())
+    var parsedRecipes = []
+    categories.forEach((recipe, index) => {
+        parsedRecipes.push(recipe.parse())
     });
-    res.json(parsedUsers);
+    res.json(parsedRecipes);
   })
 })
 
@@ -75,12 +39,6 @@ router.post('/logout', middleware.ensureAuthenticated, auth.logout)
 //login the dasborad of an authenticated user
 router.post('/getDashboard', middleware.ensureAuthenticated , home.getDashboard)
 
-router.post('/private',
-  middleware.ensureAuthenticated,
-  function(req, res) {
-    res.json({body: req.body, userId: req.userId})
-  }
-);
 
 
 module.exports = router

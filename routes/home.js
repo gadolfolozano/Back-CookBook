@@ -7,7 +7,7 @@ function getDashboard(req, res) {
   Category.find(function (err, categories) {
     if (err) {
       const errorResponse = DefaultResponses.unHandledError
-      console.log(err, errorResponse)
+      res.status(errorResponse.error.errorCode)
       res.json(errorResponse)
       return;
     }

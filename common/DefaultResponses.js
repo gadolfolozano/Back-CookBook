@@ -1,27 +1,34 @@
 const invalidCredentials = {
   error : {
-    errorCode: 4001,
+    errorCode: 400,
     message: "usuario o password incorrectos"
+  }
+}
+
+const badRequest = {
+  error : {
+    errorCode: 400,
+    message: "Bad Request"
   }
 }
 
 const userNotFound = {
   error : {
-    errorCode: 4002,
+    errorCode: 401,
     message: "no se encontró el usuario"
   }
 }
 
 const unHandledError = {
   error: {
-    errorCode: 5001,
+    errorCode: 500,
     message: "Ocurrió un error inesperado"
   }
 }
 
 const noTokenProvided = {
   error: {
-    errorCode: 403,
+    errorCode: 401,
     message: "Token was not provided"
   }
 }
@@ -45,6 +52,7 @@ const DefaultResponses = {
   userNotFound,
   unHandledError,
   notFound,
+  badRequest,
   noTokenProvided,
   tokenExpired
 }

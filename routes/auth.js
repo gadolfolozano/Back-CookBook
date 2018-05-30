@@ -12,7 +12,7 @@ function login(req, res) {
   console.log('post login', body);
   if(!body.username || !body.password) {
     const errorResponse = DefaultResponses.invalidCredentials
-    console.log.error(body, errorResponse)
+    res.status(errorResponse.error.errorCode)
     res.json(errorResponse)
     return;
   }
@@ -25,7 +25,7 @@ function login(req, res) {
     }
     if (!user) {
       const errorResponse = DefaultResponses.userNotFound
-      console.log(errorResponse)
+      res.status(errorResponse.error.errorCode)
       res.json(errorResponse)
       return
     }
@@ -43,7 +43,7 @@ function logout(req, res) {
     }
     if (!updatedUser) {
       const errorResponse = DefaultResponses.userNotFound
-      console.log.error(errorResponse)
+      res.status(errorResponse.error.errorCode)
       res.json(errorResponse)
       return
     }
@@ -72,7 +72,7 @@ function generateAndSaveToken(userModel, res){
     }
     if (!updatedUser) {
       const errorResponse = DefaultResponses.userNotFound
-      console.log.error(errorResponse)
+      res.status(errorResponse.error.errorCode)
       res.json(errorResponse)
       return
     }

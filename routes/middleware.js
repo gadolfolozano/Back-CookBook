@@ -9,12 +9,16 @@ var log = bunyan.createLogger({name: 'middleware'});
 
 function ensureAuthenticated(req, res, next) {
   if(!req.body.token) {
-    return res.json(DefaultResponses.noTokenProvided);
+    const errorResponse = DefaultResponses.noTokenProvided
+    res.status(errorResponse.error.errorCode)
+    return res.json(errorResponse);
   }
 
   var token = req.body.token;
   if(!validateToken(token)) {
-     return res.json(DefaultResponses.tokenExpired);
+    const errorResponse = DefaultResponses.tokenExpired
+    res.status(errorResponse.error.errorCode)
+    return res.json(errorResponse);
   }
 
   //Ckeck that the user id is asociated with the validtoken in users collection
@@ -23,11 +27,13 @@ function ensureAuthenticated(req, res, next) {
   User.findOne({_id: userIdFromToken, validToken: token }, function (err, user) {
     if (err) {
       const errorResponse = DefaultResponses.unHandledError
+      res.status(errorResponse.error.errorCode)
       res.json(errorResponse)
       return;
     }
     if (!user) {
       const errorResponse = DefaultResponses.userNotFound
+      res.status(errorResponse.error.errorCode)
       res.json(errorResponse)
       return
     }
