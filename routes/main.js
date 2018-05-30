@@ -1,44 +1,39 @@
-var express = require('express');
-var router = express.Router();
-var middleware = require('./middleware');
-const Category = require('../model/Category').Category;
-const Recipe = require('../model/Recipe').Recipe;
-const DefaultResponses = require('../common/DefaultResponses').DefaultResponses;
-var auth = require('./auth');
-var home = require('./home');
+const express = require('express');
+const middleware = require('./middleware');
+const { Category } = require('../model/Category');
+const { Recipe } = require('../model/Recipe');
+const auth = require('./auth');
+const home = require('./home');
 
-//logging
-var bunyan = require('bunyan');
-var log = bunyan.createLogger({name: 'routes'});
+const router = express.Router();
 
 // get all categories
-router.get('/categories', function (req, res) {
-  Category.find(function (err, categories) {
+router.get('/categories', (req, res) => {
+  Category.find((err, categories) => {
     if (err) return console.error(err);
-    res.json(categories);
-  })
-})
+    return res.json(categories);
+  });
+});
 
 // get all recipes
-router.get('/recipes', function (req, res) {
-  Recipe.find(function (err, categories) {
+router.get('/recipes', (req, res) => {
+  Recipe.find((err, categories) => {
     if (err) return console.error(err);
-    var parsedRecipes = []
-    categories.forEach((recipe, index) => {
-        parsedRecipes.push(recipe.parse())
+    const parsedRecipes = [];
+    categories.forEach((recipe) => {
+      parsedRecipes.push(recipe.parse());
     });
-    res.json(parsedRecipes);
-  })
-})
+    return res.json(parsedRecipes);
+  });
+});
 
-//login a user by username and password
-router.post('/login', auth.login)
-//logOut
-router.post('/logout', middleware.ensureAuthenticated, auth.logout)
+// login a user by username and password
+router.post('/login', auth.login);
+// logOut
+router.post('/logout', middleware.ensureAuthenticated, auth.logout);
 
-//login the dasborad of an authenticated user
-router.post('/getDashboard', middleware.ensureAuthenticated , home.getDashboard)
+// login the dasborad of an authenticated user
+router.post('/getDashboard', middleware.ensureAuthenticated, home.getDashboard);
 
 
-
-module.exports = router
+module.exports = router;

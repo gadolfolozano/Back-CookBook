@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
-const Category = require('./Category').Category;
+const { Category } = require('./Category');
 
 const RecipeSchema = mongoose.Schema({
   name: String,
   category: Category.schema,
   description: String,
-  rank: Number
+  rank: Number,
 }, { collection: 'recipes' });
 
-RecipeSchema.method('parse', function() {
-    var recipe = this.toObject();
-    return {
-      id: recipe._id,
-      description: recipe.name,
-      rank: recipe.rank,
-      category: new Category(recipe.category).parse()
-    };
+RecipeSchema.method('parse', function parse() {
+  const recipe = this.toObject();
+  return {
+    id: recipe._id,
+    description: recipe.name,
+    rank: recipe.rank,
+    category: new Category(recipe.category).parse(),
+  };
 });
 
 const Recipe = mongoose.model('recipe', RecipeSchema);

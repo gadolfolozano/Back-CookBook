@@ -1,26 +1,26 @@
-var middleware = require('./middleware');
-const Category = require('../model/Category').Category;
-const DefaultResponses = require('../common/DefaultResponses').DefaultResponses;
+const { Category } = require('../model/Category');
+const { DefaultResponses } = require('../common/DefaultResponses');
 
-//obtain the home screen, so for now it send the categories
+// obtain the home screen, so for now it send the categories
 function getDashboard(req, res) {
-  Category.find(function (err, categories) {
+  Category.find((err, categories) => {
     if (err) {
-      const errorResponse = DefaultResponses.unHandledError
-      res.status(errorResponse.error.errorCode)
-      res.json(errorResponse)
-      return;
+      const errorResponse = DefaultResponses.unHandledError;
+      res.status(errorResponse.error.errorCode);
+      return res.json(errorResponse);
     }
-    var parsedCategories = []
-    categories.forEach((category, index) => {
-        parsedCategories.push(category.parse())
+
+    const parsedCategories = [];
+    categories.forEach((category) => {
+      parsedCategories.push(category.parse());
     });
-    res.json({
+
+    return res.json({
       user: req.user,
-      categories: parsedCategories
+      categories: parsedCategories,
     });
-  })
+  });
 }
 
 
-exports.getDashboard = getDashboard
+exports.getDashboard = getDashboard;

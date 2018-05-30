@@ -90,5 +90,5 @@ function sendLoginSuccessResponse(updatedUserModel, token, res){
   res.json(response);
 }
 
-exports.login = login
-exports.logout = logout
+exports.login = login;
+exports.logout = logout;
