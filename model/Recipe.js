@@ -12,7 +12,8 @@ RecipeSchema.method('parse', function parse() {
   const recipe = this.toObject();
   return {
     id: recipe._id,
-    description: recipe.name,
+    name: recipe.name,
+    description: recipe.description,
     rank: recipe.rank,
     category: new Category(recipe.category).parse(),
   };
