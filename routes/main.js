@@ -4,6 +4,7 @@ const { Category } = require('../model/Category');
 const { Recipe } = require('../model/Recipe');
 const auth = require('./auth');
 const home = require('./home');
+const recipes = require('./recipes');
 
 const router = express.Router();
 
@@ -34,6 +35,7 @@ router.post('/logout', middleware.ensureAuthenticated, auth.logout);
 
 // login the dasborad of an authenticated user
 router.post('/getDashboard', middleware.ensureAuthenticated, home.getDashboard);
+router.put('/recipe', middleware.ensureAuthenticated, recipes.saveRecipe);
 
 
 module.exports = router;

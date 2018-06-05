@@ -6,6 +6,7 @@ const RecipeSchema = mongoose.Schema({
   category: Category.schema,
   description: String,
   rank: Number,
+  ingredients: [String],
 }, { collection: 'recipes' });
 
 RecipeSchema.method('parse', function parse() {
@@ -15,6 +16,7 @@ RecipeSchema.method('parse', function parse() {
     name: recipe.name,
     description: recipe.description,
     rank: recipe.rank,
+    ingredients: recipe.ingredients,
     category: new Category(recipe.category).parse(),
   };
 });
