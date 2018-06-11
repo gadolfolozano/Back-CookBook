@@ -40,4 +40,19 @@ function saveRecipe(req, res) {
   });
 }
 
+function removeRecipe(req, res) {
+  const { recipe } = req.body;
+  Recipe.findOneAndRemove({ _id: recipe.id }, (err) => {
+    if (err) {
+      const errorResponse = DefaultResponses.unHandledError;
+      res.status(errorResponse.error.errorCode);
+      return res.json(errorResponse);
+    }
+    return res.json({
+      removedId: recipe.id,
+    });
+  });
+}
+
 exports.saveRecipe = saveRecipe;
+exports.removeRecipe = removeRecipe;

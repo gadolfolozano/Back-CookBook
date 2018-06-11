@@ -36,6 +36,7 @@ router.post('/logout', middleware.ensureAuthenticated, auth.logout);
 // login the dasborad of an authenticated user
 router.post('/getDashboard', middleware.ensureAuthenticated, home.getDashboard);
 router.put('/recipe', middleware.ensureAuthenticated, recipes.saveRecipe);
+router.delete('/recipe', middleware.ensureAuthenticated, recipes.removeRecipe);
 
 
 module.exports = router;
