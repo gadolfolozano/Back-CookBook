@@ -2,19 +2,29 @@ const { Category } = require('../model/Category');
 const { Recipe } = require('../model/Recipe');
 const { DefaultResponses } = require('../common/DefaultResponses');
 
-function performSave(req, res, recipeToSave) {
-  const recipeModel = new Recipe(recipeToSave);
-  recipeModel.save((err, recipe) => {
-    if (err || !recipe) {
-      const errorResponse = DefaultResponses.unHandledError;
-      res.status(errorResponse.error.errorCode);
-      return res.json(errorResponse);
-    }
+function handleSave(res, err, recipe) {
+  if (err || !recipe) {
+    const errorResponse = DefaultResponses.unHandledError;
+    res.status(errorResponse.error.errorCode);
+    return res.json(errorResponse);
+  }
 
-    return res.json({
-      recipe: recipe.parse(),
-    });
+  return res.json({
+    recipe: recipe.parse(),
   });
+}
+
+function performSave(req, res, recipeId, recipeToSave) {
+  if (recipeId) {
+    Recipe.findByIdAndUpdate(recipeId, { $set: recipeToSave }, { new: true }, (err, recipe) => {
+      handleSave(res, err, recipe);
+    });
+  } else {
+    const recipeModel = new Recipe(recipeToSave);
+    recipeModel.save((err, recipe) => {
+      handleSave(res, err, recipe);
+    });
+  }
 }
 
 function saveRecipe(req, res) {
@@ -36,7 +46,7 @@ function saveRecipe(req, res) {
       ingredients: recipe.ingredients,
     };
 
-    return performSave(req, res, recipeToSave);
+    return performSave(req, res, recipe.id, recipeToSave);
   });
 }
 
