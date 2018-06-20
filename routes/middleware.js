@@ -43,13 +43,17 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function validateToken(token) {
-  if(token){
-    var payload = jwt.decode(token, config.TOKEN_SECRET);
-    if(payload.exp > moment().unix()) {
-       return true;
+  if (token) {
+    try {
+      const payload = jwt.decode(token, config.TOKEN_SECRET);
+      if (payload.exp > moment().unix()) {
+        return true;
+      }
+    } catch (err) {
+      return false;
     }
   }
-  return false
+  return false;
 }
 
 exports.ensureAuthenticated = ensureAuthenticated;

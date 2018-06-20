@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
-const { Category } = require('./Category');
 
 const RecipeSchema = mongoose.Schema({
   name: String,
-  category: Category.schema,
+  category: {
+    id: String,
+    name: String,
+  },
   description: String,
   rank: Number,
   ingredients: [String],
@@ -17,7 +19,7 @@ RecipeSchema.method('parse', function parse() {
     description: recipe.description,
     rank: recipe.rank,
     ingredients: recipe.ingredients,
-    category: new Category(recipe.category).parse(),
+    category: recipe.category,
   };
 });
 
