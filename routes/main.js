@@ -37,6 +37,7 @@ router.post('/logout', middleware.ensureAuthenticated, auth.logout);
 router.post('/getDashboard', middleware.ensureAuthenticated, home.getDashboard);
 router.put('/recipe', middleware.ensureAuthenticated, recipes.saveRecipe);
 router.delete('/recipe', middleware.ensureAuthenticated, recipes.removeRecipe);
+router.post('/search', middleware.ensureAuthenticated, recipes.searchRecipes);
 
 
 module.exports = router;

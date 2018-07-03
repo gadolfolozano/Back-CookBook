@@ -64,5 +64,25 @@ function removeRecipe(req, res) {
   });
 }
 
+function searchRecipes(req, res) {
+  Recipe.find({ name: { $regex: req.body.name, $options: 'i' } }, (err, recipes) => {
+    if (err || !recipes) {
+      const errorResponse = DefaultResponses.unHandledError;
+      res.status(errorResponse.error.errorCode);
+      return res.json(errorResponse);
+    }
+
+    const parsedRecipes = [];
+    recipes.forEach((recipe) => {
+      parsedRecipes.push(recipe.parse());
+    });
+
+    return res.json({
+      recipes: parsedRecipes,
+    });
+  });
+}
+
 exports.saveRecipe = saveRecipe;
 exports.removeRecipe = removeRecipe;
+exports.searchRecipes = searchRecipes;
