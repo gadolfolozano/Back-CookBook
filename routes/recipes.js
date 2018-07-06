@@ -65,9 +65,9 @@ function removeRecipe(req, res) {
 }
 
 function searchRecipes(req, res) {
-  const query = req.body.name;
+  const { value } = req.query;
   Recipe.find(
-    { $or: [{ name: { $regex: query, $options: 'i' } }, { ingredients: { $regex: query, $options: 'i' } }] },
+    { $or: [{ name: { $regex: value, $options: 'i' } }, { ingredients: { $regex: value, $options: 'i' } }] },
     (err, recipes) => {
       if (err || !recipes) {
         const errorResponse = DefaultResponses.unHandledError;

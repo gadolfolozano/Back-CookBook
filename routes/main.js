@@ -10,16 +10,12 @@ const router = express.Router();
 
 // get all categories
 router.get('/categories', (req, res) => {
-  Category.find((err, categories) => {
-    if (err) return console.error(err);
-    return res.json(categories);
-  });
+  Category.find((err, categories) => res.json(categories));
 });
 
 // get all recipes
 router.get('/recipes', (req, res) => {
   Recipe.find((err, categories) => {
-    if (err) return console.error(err);
     const parsedRecipes = [];
     categories.forEach((recipe) => {
       parsedRecipes.push(recipe.parse());
@@ -34,10 +30,10 @@ router.post('/login', auth.login);
 router.post('/logout', middleware.ensureAuthenticated, auth.logout);
 
 // login the dasborad of an authenticated user
-router.post('/getDashboard', middleware.ensureAuthenticated, home.getDashboard);
+router.get('/getDashboard', middleware.ensureAuthenticated, home.getDashboard);
 router.put('/recipe', middleware.ensureAuthenticated, recipes.saveRecipe);
 router.delete('/recipe', middleware.ensureAuthenticated, recipes.removeRecipe);
-router.post('/search', middleware.ensureAuthenticated, recipes.searchRecipes);
+router.get('/search', middleware.ensureAuthenticated, recipes.searchRecipes);
 
 
 module.exports = router;
