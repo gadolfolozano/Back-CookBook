@@ -10,7 +10,11 @@ var log = bunyan.createLogger({name: 'app'});
 
 //connecting database
 var mongoose = require('mongoose');
-mongoose.connect(config.DATA_BASE_URI);
+mongoose.connect(config.DATA_BASE_URI, (err) => {
+  if (err) {
+    log.error('DB connection error', err);
+  }
+});
 var db = mongoose.connection;
 db.on('error', function() {
   log.error('DB connection error');

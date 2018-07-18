@@ -7,6 +7,7 @@ const RecipeSchema = mongoose.Schema({
     name: String,
   },
   description: String,
+  cheffName: String,
   rank: Number,
   ingredients: [String],
 }, { collection: 'recipes' });
@@ -19,6 +20,7 @@ RecipeSchema.method('parse', function parse() {
     description: recipe.description,
     rank: recipe.rank,
     ingredients: recipe.ingredients,
+    cheffName: recipe.cheffName,
     category: recipe.category,
   };
 });

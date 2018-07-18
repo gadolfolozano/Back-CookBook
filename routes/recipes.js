@@ -42,6 +42,7 @@ function saveRecipe(req, res) {
       name: recipe.name,
       description: recipe.description,
       rank: recipe.rank,
+      cheffName: recipe.cheffName,
       category: parsedCategory,
       ingredients: recipe.ingredients,
     };
